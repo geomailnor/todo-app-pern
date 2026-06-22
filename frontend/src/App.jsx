@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { FaPlus, FaTrash, FaCheck } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -16,7 +17,7 @@ function App() {
   async function loadTasks() {
     try {
       setIsLoading(true);
-      const res = await axios.get('http://localhost:3000/api/todos');
+      const res = await axios.get(`${API_URL}/api/todos`);
       setTasks(res.data.tasks || []);
     } catch (error) {
       console.error('Грешка при зареждане', error);
@@ -33,7 +34,7 @@ function App() {
       return
     }
     try {
-      const res = await axios.post('http://localhost:3000/api/todos', { task: taskText });
+      const res = await axios.post(`${API_URL}/api/todos`, { task: taskText });
       setTasks((prevTasks) => [res.data, ...prevTasks]);
       setTaskText('');
       toast.success('Задачата е добавена!');
@@ -45,7 +46,7 @@ function App() {
 
   async function toggleTask(id, completed) {
     try {
-      await axios.put(`http://localhost:3000/api/todos/${id}`, { completed: completed });
+      await axios.put(`${API_URL}/api/todos/${id}`, { completed: completed });
       setTasks((prevTasks) => prevTasks.map((task) => task.id === id ? { ...task, completed } : task));
       if (completed) {
         toast.success('✅ Задачата е изпълнена!');
@@ -64,7 +65,7 @@ function App() {
       return;
     }
     try {
-      await axios.put(`http://localhost:3000/api/todos/text/${id}`, { task: editedText });
+      await axios.put(`${API_URL}/api/todos/text/${id}`, { task: editedText });
       setTasks((prevTasks) => prevTasks.map((task) => task.id === id ? { ...task, task: editedText } : task));
 
       setEditingId(null);
@@ -79,7 +80,7 @@ function App() {
 
   async function deleteTask(id) {
     try {
-      await axios.delete(`http://localhost:3000/api/todos/${id}`);
+      await axios.delete(`${API_URL}/api/todos/${id}`);
       setTasks((tasks) => tasks.filter((task) => task.id !== id));
       toast.success('🗑️ Задачата е изтрита!');
     } catch (error) {
