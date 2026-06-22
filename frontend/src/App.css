@@ -1,0 +1,271 @@
+:root {
+  --primary: #5e6ad2;
+  --primary-hover: #4a56c4;
+  --text: #2c3e50;
+  --text-light: #8b8fa7;
+  --danger: #e74c3c;
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  min-height: 100vh;
+}
+
+.app-container {
+
+  width: 66.67vw;
+  background-color: var(--card);
+  border-radius: 14px;
+  padding: 30px;
+}
+
+.my-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid rgb(220, 220, 220);
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+}
+
+.task-statist {
+  display: flex;
+  gap: 15px;
+}
+
+
+.task-statist span {
+  background-color: var(--bg);
+  border-radius: 5px;
+  padding: 5px 12px;
+  color: #656771;
+  font-size: 0.9rem;
+}
+
+.task-statist span:last-child {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.my-header h1 {
+  font-size: 1.4rem;
+  color: #2C3E50;
+}
+
+/* ===== ФОРМА ЗА ДОБАВЯНЕ ===== */
+.add-task-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.input {
+  flex: 1;
+  font-size: 1rem;
+  padding: 10px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 10px 2px rgba(94, 106, 210, 0.1);
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--card);
+  border: none;
+  background-color: var(--primary);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.add-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(94, 106, 210, 0.3);
+}
+
+.add-btn:active {
+  transform: scale(0.97);
+}
+
+.add-icon {
+  font-size: 1rem;
+}
+
+/* ===== СПИСЪК СЪС ЗАДАЧИ ===== */
+.task-list {
+  list-style: none;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  animation: slideIn 1.3s ease;
+  transition: var(--transition);
+}
+
+.task-item:hover {
+  background: #e8eaf6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.task-item.completed {
+  opacity: 0.7;
+}
+
+/* ===== ИКОНА ЗА ЧЕКБОКС ===== */
+.task-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.76rem;
+  color: transparent;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.task-check:hover {
+  border-color: var(--primary);
+  transform: scale(1.1);
+}
+
+.task-check.checked {
+  background: #4CAF50;
+  border-color: #4CAF50;
+  color: var(--card);
+}
+
+/* === Текст на задачата === */
+.task-text {
+  flex: 1;
+  font-size: 1rem;
+  overflow-wrap: break-word;
+  transition: transform 0.3s ease;
+}
+
+.task-item.completed .task-text {
+  color: #8b8fa7;
+}
+
+/* ===== БУТОН ЗА ИЗТРИВАНЕ ===== */
+.delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #ffebee;
+  transform: scale(1.1);
+  color: var(--danger);
+}
+
+.loading {
+  text-align: center;
+  padding-bottom: 20px;
+  color: var(--text);
+}
+
+.empty-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--text-light);
+  padding: 40px 20px;
+}
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 640px) {
+  .app-container {
+    padding: 20px;
+  }
+
+  .add-btn {
+    padding: 12px 14px;
+  }
+
+  .btn-zagl {
+    display: none;
+  }
+
+  .my-header {
+    flex-direction: column;
+  }
+
+  .task-statist {
+    padding-top: 10px;
+  }
+
+  .task-item {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 15px;
+    width: 100vw;
+    /* На телефон - пълна ширина */
+    border-radius: 0;
+  }
+
+  .my-header h1 {
+    font-size: 1.2rem;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
