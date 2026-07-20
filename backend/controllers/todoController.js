@@ -2,7 +2,7 @@ import { sql } from "../config/db.js";
 
 // CRUD Operations
 
-export const getTasks = async (rew, res) => {
+export const getTasks = async (req, res) => {
   try {
     const tasks = await sql`
     SELECT * FROM todos
