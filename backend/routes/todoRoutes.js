@@ -1,13 +1,16 @@
 import express from 'express';
 import { createTask, deleteTask, getTask, getTasks, updateTask, updateTaskText } from '../controllers/todoController.js';
 
+
+import { authenticate } from '../middleware/auth.js';
 const router = express.Router();
 
-router.get('/', getTasks);
-router.get('/:id', getTask);
-router.post('/', createTask);
-router.put('/:id', updateTask);
-router.put('/text/:id', updateTaskText);
-router.delete('/:id', deleteTask);
+// ВСИЧКИ routes изискват автентикация
+router.get('/', authenticate, getTasks);
+router.post('/', authenticate, createTask);
+router.get('/:id', authenticate, getTask);
+router.put('/:id', authenticate, updateTask);
+router.patch('/:id/text', authenticate, updateTaskText);
+router.delete('/:id', authenticate, deleteTask);
 
 export default router;
