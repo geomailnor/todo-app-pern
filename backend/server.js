@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import todoRoutes from './routes/todoRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import { sql } from './config/db.js';
 
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 app.use('/api/todos', todoRoutes);
+app.use('/api/auth', authRoutes);
 
 async function initDB() {
   try {
@@ -28,7 +30,32 @@ async function initDB() {
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     `;
-    console.log('Database initialized successfully!');
+    console.log('✅ Таблица todos инициализирана!');
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS users(
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+    console.log('✅ Таблица users инициализирана');
+
+    // Добавяне на user_id в todos (ако не съществува)
+    await sql`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'todos' AND column_name = 'user_id'
+        ) THEN
+          ALTER TABLE todos ADD COLUMN user_id INTEGER REFERENCES users(id) ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `;
+    console.log('✅ Колона user_id добавена към todos');
   }
   catch (error) {
     console.log('Error init DB', error);
