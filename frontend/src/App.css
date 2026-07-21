@@ -40,6 +40,33 @@ body {
   padding-bottom: 20px;
 }
 
+
+/* бутон излизане */
+.logout-btn {
+  padding: 10px 24px;
+  margin-right: 15px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: var(--transition);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logout-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+  box-shadow: 0 4px 12px rgba(94, 106, 210, 0.3);
+}
+
+.logout-btn:active {
+  transform: scale(0.97);
+}
+
 .task-statist {
   display: flex;
   gap: 15px;

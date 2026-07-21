@@ -226,17 +226,7 @@ function App() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <h1>Моите задачи</h1>
           <button
-            onClick={logout}
-            style={{
-              padding: '8px 16px',
-              background: '#ef4444',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
+            onClick={logout} className="logout-btn">
             🚪 Изход
           </button>
         </div>
