@@ -10,9 +10,7 @@ import { useAuth } from './contexts/AuthContext';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function App() {
-  console.log('📱 App с автентикация');
-
-  // 👇 ВСИЧКИ HOKS НА ЕДНО МЯСТО - ПРЕДИ ВСИЧКИ RETURN
+  // ✅ ВСИЧКИ HOOKS НА ЕДНО МЯСТО - ПРЕДИ ВСИЧКИ RETURN
   const { isAuthenticated, loading: authLoading, logout } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [taskText, setTaskText] = useState('');
@@ -20,7 +18,7 @@ function App() {
   const [editingId, setEditingId] = useState(null);
   const [editedText, setEditedText] = useState('');
 
-  // 👇 ФУНКЦИИТЕ МОГАТ ДА СА ТУК
+  // ✅ ФУНКЦИИТЕ
   const getHeaders = () => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     return {
@@ -156,10 +154,10 @@ function App() {
     }
   }, [isAuthenticated]);
 
-  // 👇 РАННИЯТ RETURN Е НАКРАЯ, СЛЕД ВСИЧКИ HOOKS
-  // Ако не е автентициран, покажи Login страницата
+  // ✅ ВСИЧКИ RETURN-И СА НАКРАЯ, СЛЕД ВСИЧКИ HOOKS
+
+  // Показване на Login, ако не е автентициран
   if (!authLoading && !isAuthenticated) {
-    console.log('🔐 Показвам Login');
     return (
       <>
         <Toaster
@@ -179,7 +177,7 @@ function App() {
     );
   }
 
-  // Ако се зарежда
+  // Показване на зареждане
   if (authLoading) {
     return (
       <div style={{
@@ -194,7 +192,7 @@ function App() {
     );
   }
 
-  // 👇 ОСНОВНИЯТ RETURN
+  // ✅ ОСНОВЕН RETURN
   return (
     <div className='app-container'>
       <Toaster
