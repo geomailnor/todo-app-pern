@@ -1,7 +1,7 @@
 // frontend/src/App.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaPlus, FaTrash, FaCheck, FaEdit } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaCheck, FaEdit, FaSignOutAlt } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
 import Auth from './components/Auth/Auth';
@@ -231,7 +231,7 @@ function App() {
           <span>изпълнени: {tasks.filter((task) => task.completed).length}</span>
 
         </div>
-        <button onClick={logout} className="logout-btn">🚪Изход</button>
+        <button onClick={logout} className="logout-btn"><FaSignOutAlt />Изход</button>
       </header>
 
       {isLoading && <p className='loading'>⏳ Loading...</p>}

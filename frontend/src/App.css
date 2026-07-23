@@ -41,33 +41,31 @@ body {
 }
 
 
-/* бутон излизане */
+/* ===== БУТОН ЗА ИЗЛИЗАНЕ ===== */
 .logout-btn {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  margin-left: 12px;
-  background: #dc2626;
-  color: white;
-  border: none;
+  gap: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  color: #78909c;
+  border: 1px solid #bfbfbf;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   white-space: nowrap;
   transition: var(--transition);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logout-btn:hover {
-  background: #b91c1c;
+  background: #ffebee;
+  color: #d32f2f;
+  border-color: #ffcdd2;
   transform: translateY(-1px);
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-  /* box-shadow: 0 4px 12px rgba(94, 106, 210, 0.3); */
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
 .logout-btn:active {
-  transform: scale(0.97);
+  transform: scale(0.95);
 }
 
 .task-statist {
