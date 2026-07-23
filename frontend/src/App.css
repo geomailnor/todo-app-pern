@@ -24,8 +24,8 @@ body {
 }
 
 .app-container {
-
   width: 66.67vw;
+  min-width: 324px;
   background-color: var(--card);
   border-radius: 14px;
   padding: 30px;
@@ -43,15 +43,17 @@ body {
 
 /* бутон излизане */
 .logout-btn {
-  padding: 10px 24px;
-  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin-left: 12px;
   background: #dc2626;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
   transition: var(--transition);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -60,7 +62,8 @@ body {
   background: #b91c1c;
   transform: translateY(-1px);
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-  box-shadow: 0 4px 12px rgba(94, 106, 210, 0.3);
+  /* box-shadow: 0 4px 12px rgba(94, 106, 210, 0.3); */
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
 .logout-btn:active {
@@ -76,9 +79,11 @@ body {
 .task-statist span {
   background-color: var(--bg);
   border-radius: 5px;
-  padding: 5px 12px;
+  padding: 8px 12px;
   color: #656771;
   font-size: 0.9rem;
+  height: 36px;
+  white-space: nowrap;
 }
 
 .task-statist span:last-child {
@@ -89,6 +94,7 @@ body {
 .my-header h1 {
   font-size: 1.4rem;
   color: #2C3E50;
+  padding: 0 12px;
 }
 
 /* ===== ФОРМА ЗА ДОБАВЯНЕ ===== */
@@ -147,6 +153,35 @@ body {
 /* ===== СПИСЪК СЪС ЗАДАЧИ ===== */
 .task-list {
   list-style: none;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* .task-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.task-list::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-radius: 4px;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.task-list::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+} */
+
+.input:focus-visible,
+.add-btn:focus-visible,
+.logout-btn:focus-visible,
+.delete-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .task-item {
@@ -188,7 +223,11 @@ body {
 
 .task-check:hover {
   border-color: var(--primary);
-  transform: scale(1.1);
+  transform: scale(1.15);
+}
+
+.task-check:active {
+  transform: scale(0.9);
 }
 
 .task-check.checked {
@@ -232,6 +271,38 @@ body {
   color: var(--danger);
 }
 
+.delete-btn:active {
+  transform: scale(0.9);
+}
+
+/* ===== БУТОН ЗА РЕДАКТИРАНЕ ===== */
+.edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  /* color: var(--text-light); */
+  color: #606567;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.edit-btn:hover {
+  background: #e3f2fd;
+  color: #1976d2;
+  transform: scale(1.1);
+}
+
+.edit-btn:active {
+  transform: scale(0.9);
+}
+
 .loading {
   text-align: center;
   padding-bottom: 20px;
@@ -246,6 +317,20 @@ body {
 }
 
 /* ==== RESPONSIVE ==== */
+@media (max-width : 802px) {
+  .my-header {
+    flex-direction: column;
+  }
+
+  .task-statist {
+    padding-top: 10px;
+  }
+
+  .logout-btn {
+    margin-top: 12px;
+  }
+}
+
 @media (max-width: 640px) {
   .app-container {
     padding: 20px;
@@ -257,10 +342,6 @@ body {
 
   .btn-zagl {
     display: none;
-  }
-
-  .my-header {
-    flex-direction: column;
   }
 
   .task-statist {
@@ -275,7 +356,7 @@ body {
 @media (max-width: 480px) {
   .app-container {
     padding: 15px;
-    width: 100vw;
+    width: 100%;
     /* На телефон - пълна ширина */
     border-radius: 0;
   }

@@ -1,7 +1,7 @@
 // frontend/src/App.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaPlus, FaTrash, FaCheck } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaCheck, FaEdit } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
 import Auth from './components/Auth/Auth';
@@ -223,17 +223,15 @@ function App() {
       />
 
       <header className='my-header'>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+        <div>
           <h1>Моите задачи</h1>
-          <button
-            onClick={logout} className="logout-btn">
-            🚪 Изход
-          </button>
         </div>
         <div className='task-statist'>
           <span>общо: {tasks.length}</span>
           <span>изпълнени: {tasks.filter((task) => task.completed).length}</span>
+
         </div>
+        <button onClick={logout} className="logout-btn">🚪Изход</button>
       </header>
 
       {isLoading && <p className='loading'>⏳ Loading...</p>}
@@ -277,7 +275,7 @@ function App() {
                   <FaCheck />
                 </span>
                 <span className='task-text'>{task.task}</span>
-                <button className='edit-btn' onClick={() => startEditing(task)}>✏️</button>
+                <button className='edit-btn' onClick={() => startEditing(task)}><FaEdit /></button>
                 <button onClick={() => deleteTask(task.id)} className='delete-btn'>
                   <FaTrash />
                 </button>
