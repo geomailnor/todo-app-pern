@@ -1,6 +1,5 @@
 # Зависимости
 node_modules/
-package-lock.json
 
 # Среда
 .env
@@ -29,11 +28,9 @@ dist/
 
 # Backend
 backend/node_modules/
-backend/package-lock.json
 backend/.env
 
 # Frontend
 frontend/node_modules/
-frontend/package-lock.json
 frontend/.env
 frontend/dist/

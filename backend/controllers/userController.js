@@ -25,10 +25,18 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { name, email } = req.body;
+    const name = req.body.name?.trim();
+    const email = req.body.email?.trim();
 
+    // Проверка дали са празни след trim
     if (!name || !email) {
       return res.status(400).json({ message: 'Името и имейлът са задължителни' });
+    }
+
+    // Валидация на имейл формата
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Моля, въведете валиден имейл адрес!' });
     }
 
     // Проверка дали имейлът не се използва от друг потребител
@@ -40,6 +48,7 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: 'Този имейл вече се използва от друг потребител' });
     }
 
+    // Обновяване на профила
     const result = await sql`
       UPDATE users 
       SET name = ${name}, email = ${email}

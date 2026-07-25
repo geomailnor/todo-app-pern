@@ -27,7 +27,12 @@ export const getTasks = async (req, res) => {
 export const createTask = async (req, res) => {
   const { task } = req.body;
   if (!task) {
-    return res.status(400).json({ success: false, message: 'Task field are required!' });
+    return res.status(400).json({ success: false, message: 'Полето Задача не може да е празно!' });
+  }
+  if (task.length > 255) {
+    return res.status(400).json({
+      message: 'Задачата е прекалено дълга!'
+    });
   }
   try {
     const userId = req.user.id; // Вземаме от JWT токена
@@ -75,6 +80,9 @@ export const getTask = async (req, res) => {
 export const updateTask = async (req, res) => {
   const { id } = req.params;
   const { completed } = req.body;
+  if (isNaN(id)) {
+    return res.status(400).json({ message: 'невалиден id' });
+  }
   if (typeof completed !== 'boolean') {
     return res.status(400).json({ success: false, message: 'Status must be "true" or "false"' });
   }
@@ -131,6 +139,9 @@ export const updateTaskText = async (req, res) => {
 // ============================================
 export const deleteTask = async (req, res) => {
   const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).json({ message: 'невалиден id' });
+  }
   try {
     const userId = req.user.id;
     const deletedTask = await sql`

@@ -1,10 +1,9 @@
 // frontend/src/App.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { FaPlus, FaTrash, FaCheck, FaEdit, FaSignOutAlt, FaUser, FaArrowLeft } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
-import { Link, useLocation } from 'react-router-dom';
 import './App.css';
 import Auth from './components/Auth/Auth';
 import Profile from './components/Profile/Profile';

@@ -13,7 +13,9 @@ const Register = ({ onSwitchToLogin }) => {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({
+      ...prev, [e.target.name]: e.target.value
+    }));
     // Изчистване на грешка при писане
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: '' });

@@ -1,4 +1,3 @@
-// frontend/src/api.js
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Взима токена от localStorage или sessionStorage
@@ -98,7 +97,7 @@ export const updateTodo = async (id, completed) => {
 
 export const updateTodoText = async (id, task) => {
   const response = await fetch(`${API_URL}/api/todos/${id}`, {
-    method: 'PATCH',
+    method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify({ task })
   });

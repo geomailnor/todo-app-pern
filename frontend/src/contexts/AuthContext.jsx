@@ -24,7 +24,12 @@ export const AuthProvider = ({ children }) => {
 
     if (savedToken && savedUser) {
       setToken(savedToken);
-      setUser(JSON.parse(savedUser));
+      try {
+        setUser(JSON.parse(savedUser));
+      }
+      catch {
+        logout();
+      }
     }
     setLoading(false);
   }, []);

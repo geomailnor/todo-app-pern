@@ -1,4 +1,3 @@
-// frontend/src/components/Auth/Login.jsx
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { loginUser } from '../../api';
@@ -17,7 +16,7 @@ const Login = ({ onSwitchToRegister }) => {
 
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
+    setFormData(prev => ({ ...prev, [e.target.name]: value }));
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: '' });
     }

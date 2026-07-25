@@ -6,11 +6,19 @@ import jwt from 'jsonwebtoken';
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+
+    // 1. Проверка за празни полета
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Моля попълнете всички полета!" });
     }
-
-    // Проверка дали имейлът вече съществува
+    // 2. Валидация на имейл формат
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        message: 'Моля, въведете валиден имейл адрес!'
+      });
+    }
+    // 3. Проверка дали имейлът вече съществува
     const existingUser = await sql`SELECT * FROM users WHERE email = ${email}`;
 
     if (existingUser.length > 0) {
