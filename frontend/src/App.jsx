@@ -1,15 +1,21 @@
 // frontend/src/App.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaPlus, FaTrash, FaCheck, FaEdit, FaSignOutAlt } from 'react-icons/fa';
+import { Routes, Route } from 'react-router-dom';
+import { FaPlus, FaTrash, FaCheck, FaEdit, FaSignOutAlt, FaUser, FaArrowLeft } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
+import { Link, useLocation } from 'react-router-dom';
 import './App.css';
 import Auth from './components/Auth/Auth';
+import Profile from './components/Profile/Profile';
 import { useAuth } from './contexts/AuthContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function App() {
+  const location = useLocation();
+  const isProfilePage = location.pathname === '/profile';
+
   // ✅ ВСИЧКИ HOOKS НА ЕДНО МЯСТО - ПРЕДИ ВСИЧКИ RETURN
   const { isAuthenticated, loading: authLoading, logout } = useAuth();
   const [tasks, setTasks] = useState([]);
@@ -192,7 +198,8 @@ function App() {
     );
   }
 
-  // ✅ ОСНОВЕН RETURN
+
+  // ✅ ОСНОВЕН RETURN (променен)
   return (
     <div className='app-container'>
       <Toaster
@@ -224,72 +231,95 @@ function App() {
 
       <header className='my-header'>
         <div>
-          <h1>Моите задачи</h1>
+          <h1>{isProfilePage ? 'Моят профил' : 'Моите задачи'}</h1> {/* 👈 ПРОМЕНИ */}
         </div>
-        <div className='task-statist'>
-          <span>общо: {tasks.length}</span>
-          <span>изпълнени: {tasks.filter((task) => task.completed).length}</span>
-
+        {!isProfilePage && ( // 👈 СТАТИСТИКИ САМО НА ГЛАВНАТА
+          <div className='task-statist'>
+            <span>общо: {tasks.length}</span>
+            <span>изпълнени: {tasks.filter((task) => task.completed).length}</span>
+          </div>
+        )}
+        <div className="header-actions">
+          {isProfilePage ? ( // 👈 КОГАТО СМЕ В ПРОФИЛА
+            <Link to="/" className="header-btns back-btn">
+              <FaArrowLeft /> Назад
+            </Link>
+          ) : ( // 👈 КОГАТО СМЕ В СПИСЪКА
+            <Link to="/profile" className="header-btns profile-btn">
+              <FaUser /> Профил
+            </Link>
+          )}
+          <button onClick={logout} className="header-btns logout-btn">
+            <FaSignOutAlt /> Изход
+          </button>
         </div>
-        <button onClick={logout} className="logout-btn"><FaSignOutAlt />Изход</button>
       </header>
 
-      {isLoading && <p className='loading'>⏳ Loading...</p>}
+      {/* 👇 НОВО: Маршрутизация между задачи и профил */}
+      <Routes>
+        <Route path="/" element={
+          <>
+            {isLoading && <p className='loading'>⏳ Loading...</p>}
 
-      <div className='add-task-form'>
-        <input
-          className='input'
-          type="text"
-          value={taskText}
-          onChange={(e) => setTaskText(e.target.value)}
-          placeholder='Нова задача'
-        />
-        <button className='add-btn' title='Добави задача' onClick={addTask}>
-          <FaPlus className='add-icon' />
-          <span className='btn-zagl'>Добави</span>
-        </button>
-      </div>
+            <div className='add-task-form'>
+              <input
+                className='input'
+                type="text"
+                value={taskText}
+                onChange={(e) => setTaskText(e.target.value)}
+                placeholder='Нова задача'
+              />
+              <button className='add-btn' title='Добави задача' onClick={addTask}>
+                <FaPlus className='add-icon' />
+                <span className='btn-zagl'>Добави</span>
+              </button>
+            </div>
 
-      <ul className='task-list'>
-        {tasks.map((task) => (
-          <li key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
-            {editingId === task.id ? (
-              <>
-                <input
-                  type='text'
-                  value={editedText}
-                  onChange={(e) => setEditedText(e.target.value)}
-                  className='edit-input'
-                  autoFocus
-                  onKeyPress={(e) => e.key === 'Enter' && updateTask(task.id)}
-                />
-                <button className='save-btn' onClick={() => updateTask(task.id)}>💾 Запази</button>
-                <button className='cancel-btn' onClick={cancelEditing}>❌ Отказ</button>
-              </>
-            ) : (
-              <>
-                <span
-                  className={`task-check ${task.completed ? 'checked' : ''}`}
-                  onClick={() => toggleTask(task.id, !task.completed)}
-                >
-                  <FaCheck />
-                </span>
-                <span className='task-text'>{task.task}</span>
-                <button className='edit-btn' onClick={() => startEditing(task)}><FaEdit /></button>
-                <button onClick={() => deleteTask(task.id)} className='delete-btn'>
-                  <FaTrash />
-                </button>
-              </>
+            <ul className='task-list'>
+              {tasks.map((task) => (
+                <li key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
+                  {editingId === task.id ? (
+                    <>
+                      <input
+                        type='text'
+                        value={editedText}
+                        onChange={(e) => setEditedText(e.target.value)}
+                        className='edit-input'
+                        autoFocus
+                        onKeyPress={(e) => e.key === 'Enter' && updateTask(task.id)}
+                      />
+                      <button className='save-btn' onClick={() => updateTask(task.id)}>💾 Запази</button>
+                      <button className='cancel-btn' onClick={cancelEditing}>❌ Отказ</button>
+                    </>
+                  ) : (
+                    <>
+                      <span
+                        className={`task-check ${task.completed ? 'checked' : ''}`}
+                        onClick={() => toggleTask(task.id, !task.completed)}
+                      >
+                        <FaCheck />
+                      </span>
+                      <span className='task-text'>{task.task}</span>
+                      <button className='edit-btn' title="Редактирай задача" onClick={() => startEditing(task)}><FaEdit /></button>
+                      <button onClick={() => deleteTask(task.id)} className='delete-btn' title="Изтрий задача">
+                        <FaTrash />
+                      </button>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            {tasks.length === 0 && !isLoading && (
+              <p className='empty-message'>📭 Нямате задачи. Добавете нова!</p>
             )}
-          </li>
-        ))}
-      </ul>
-
-      {tasks.length === 0 && !isLoading && (
-        <p className='empty-message'>📭 Нямате задачи. Добавете нова!</p>
-      )}
+          </>
+        } />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
     </div>
   );
 }
+
 
 export default App;

@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 
 import todoRoutes from './routes/todoRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import { sql } from './config/db.js';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(morgan("dev"));
 
 app.use('/api/todos', todoRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 async function initDB() {
   try {

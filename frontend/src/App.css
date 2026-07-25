@@ -15,12 +15,23 @@
   box-sizing: border-box;
 }
 
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+html {
+  overflow-y: scroll;
+}
+
 body {
   display: flex;
   justify-content: center;
   font-family: Arial, Helvetica, sans-serif;
   background-color: var(--bg);
   min-height: 100vh;
+  scrollbar-gutter: stable;
 }
 
 .app-container {
@@ -40,11 +51,17 @@ body {
   padding-bottom: 20px;
 }
 
-
-/* ===== БУТОН ЗА ИЗЛИЗАНЕ ===== */
-.logout-btn {
+.header-actions {
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+/* ===== БУТОН ЗА ИЗЛИЗАНЕ ===== */
+.header-btns {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 6px 12px;
   background: transparent;
@@ -54,18 +71,43 @@ body {
   cursor: pointer;
   font-size: 0.85rem;
   white-space: nowrap;
+  text-decoration: none;
   transition: var(--transition);
+  height: 36px;
+  line-height: 1;
+}
+
+.header-btns:hover {
+  transform: translateY(-1px);
+}
+
+.header-btns:active {
+  transform: scale(0.95);
+}
+
+.header-btns:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(94, 106, 210, 0.3);
+}
+
+/* Специфични цветове */
+.profile-btn:hover {
+  background: #e3f2fd;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.back-btn:hover {
+  background: #e3f2fd;
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 .logout-btn:hover {
   background: #ffebee;
   color: #d32f2f;
   border-color: #ffcdd2;
-  transform: translateY(-1px);
-}
-
-.logout-btn:active {
-  transform: scale(0.95);
 }
 
 .task-statist {
@@ -144,6 +186,22 @@ body {
   transform: scale(0.97);
 }
 
+/* ===== ПРЕМАХВАНЕ НА СТАНДАРТНИЯ OUTLINE ===== */
+:focus-visible {
+  outline: none;
+}
+
+.save-btn:focus-visible,
+.cancel-btn:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.add-btn:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.3);
+}
+
 .add-icon {
   font-size: 1rem;
 }
@@ -156,30 +214,10 @@ body {
   padding-right: 4px;
 }
 
-/* .task-list::-webkit-scrollbar {
-  width: 8px;
-}
-
-.task-list::-webkit-scrollbar-track {
-  background: var(--bg);
-  border-radius: 4px;
-}
-
-.task-list::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
-}
-
-.task-list::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-hover);
-} */
-
-.input:focus-visible,
-.add-btn:focus-visible,
-.logout-btn:focus-visible,
-.delete-btn:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+.input:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.2);
 }
 
 .task-item {
@@ -273,6 +311,11 @@ body {
   transform: scale(0.9);
 }
 
+.delete-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 /* ===== БУТОН ЗА РЕДАКТИРАНЕ ===== */
 .edit-btn {
   display: flex;
@@ -301,6 +344,28 @@ body {
   transform: scale(0.9);
 }
 
+.edit-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ===== ПОЛЕ ЗА РЕДАКТИРАНЕ ===== */
+.edit-input {
+  flex: 1;
+  font-size: 1rem;
+  padding: 8px 14px;
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  outline: none;
+  background: white;
+  transition: var(--transition);
+}
+
+.edit-input:focus {
+  border-color: var(--primary-hover);
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.15);
+}
+
 .loading {
   text-align: center;
   padding-bottom: 20px;
@@ -314,6 +379,434 @@ body {
   padding: 40px 20px;
 }
 
+/* ===== АВТЕНТИКАЦИЯ (Login / Register) ===== */
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.auth-title {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-label {
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.auth-input {
+  padding: 10px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--transition);
+  background: #fafafa;
+}
+
+.auth-input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.1);
+  background: white;
+}
+
+.auth-error {
+  color: #d32f2f;
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.auth-remember {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.auth-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.auth-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.auth-submit-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  color: white;
+  margin-top: 4px;
+}
+
+.login-btn {
+  background: var(--primary);
+}
+
+.login-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.register-btn {
+  background: #16a34a;
+}
+
+.register-btn:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.auth-switch-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.auth-switch-btn:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* ===== ПРОФИЛ ===== */
+.profile-container {
+  width: 100%;
+  max-width: 550px;
+  /* Същата ширина като auth-container */
+  margin: 0 auto;
+  /* Центриране */
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.profile-title {
+  font-size: 1.8rem;
+  color: var(--text);
+  margin-bottom: 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.profile-card {
+  width: 100%;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e8e8e8;
+  transition: var(--transition);
+}
+
+.profile-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.profile-card h3 {
+  color: var(--text);
+  margin-bottom: 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Информация за потребителя */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 40px;
+}
+
+.profile-field:last-of-type {
+  border-bottom: none;
+}
+
+.profile-field label {
+  color: var(--text-light);
+  font-weight: 500;
+  font-size: 0.9rem;
+  min-width: 80px;
+  /* 👈 Фиксирана ширина за лейбъла */
+  flex-shrink: 0;
+  /* 👈 За да не се свива */
+}
+
+.profile-field p {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.profile-edit-btn {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition);
+  align-self: flex-start;
+}
+
+.profile-edit-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(94, 106, 210, 0.3);
+}
+
+.profile-edit-btn:active {
+  transform: scale(0.97);
+}
+
+/* Форма за редактиране */
+.profile-form .form-group {
+  margin-bottom: 16px;
+}
+
+.profile-form label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.profile-form input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--transition);
+  background: #fafafa;
+}
+
+.profile-form input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.1);
+  background: white;
+}
+
+.profile-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Бутони във формите */
+.save-btn {
+  padding: 10px 28px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.save-btn:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.save-btn:active {
+  transform: scale(0.97);
+}
+
+.cancel-btn {
+  padding: 10px 28px;
+  background: #e5e7eb;
+  color: var(--text);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.cancel-btn:hover {
+  background: #d1d5db;
+  transform: translateY(-2px);
+}
+
+/* Бутон за смяна на парола */
+.password-btn {
+  padding: 10px 28px;
+  background: hsl(38, 92%, 35%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: var(--transition);
+  width: 100%;
+}
+
+.password-btn:hover {
+  background: hsl(38, 92%, 25%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.password-btn:active {
+  transform: scale(0.97);
+}
+
+/* Опасна зона */
+.danger-card {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.danger-card h3 {
+  color: #dc2626;
+}
+
+.danger-text {
+  color: #991b1b;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.danger-btn {
+  padding: 10px 28px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.danger-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.danger-btn:active {
+  transform: scale(0.97);
+}
+
+/* Потвърждение за изтриване */
+.delete-confirm {
+  background: #fff7ed;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid #fed7aa;
+}
+
+.confirm-text {
+  color: #9a3412;
+  font-weight: 500;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.confirm-yes {
+  background: #dc2626 !important;
+}
+
+.confirm-yes:hover {
+  background: #b91c1c !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3) !important;
+}
+
+/* Зареждане */
+.profile-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+/* ===== ЛИНК КЪМ ПРОФИЛА ===== */
+.profile-link {
+  margin-left: 12px;
+  text-decoration: none;
+}
+
 /* ==== RESPONSIVE ==== */
 @media (max-width : 802px) {
   .my-header {
@@ -324,7 +817,7 @@ body {
     padding-top: 10px;
   }
 
-  .logout-btn {
+  .header-btns {
     margin-top: 12px;
   }
 }
@@ -357,6 +850,12 @@ body {
     width: 100%;
     /* На телефон - пълна ширина */
     border-radius: 0;
+  }
+
+  .auth-container {
+    max-width: 100%;
+    width: 95%;
+    padding: 24px 16px;
   }
 
   .my-header h1 {
