@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../contexts/AuthContext';
@@ -8,12 +8,11 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const Profile = () => {
   const { user, token, logout } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: ''
   });
-  // 👇 НОВО: отделно състояние за формата за редакция
   const [editFormData, setEditFormData] = useState({
     name: '',
     email: ''
@@ -24,6 +23,97 @@ const Profile = () => {
     confirmPassword: ''
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const firstInputRef = useRef(null);
+  // Затваряне на модала
+  const closeEditModal = useCallback(() => {
+    setEditFormData(formData);
+    setShowEditModal(false);
+  }, [formData]);
+
+  // Escape key handler
+  useEffect(() => {
+    if (!showEditModal) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        closeEditModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showEditModal, closeEditModal]);
+
+  // Scroll lock - предотвратява скролиране на страницата когато модала е отворен
+  useEffect(() => {
+    if (showEditModal) {
+      const scrollY = window.scrollY;
+
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+
+      return () => {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [showEditModal]);
+
+  // Focus trap - задържа фокуса в модала
+  useEffect(() => {
+    if (!showEditModal) return;
+
+    const modalElement = document.querySelector('.modal-frm');
+    if (!modalElement) return;
+
+    const focusableElements = modalElement.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    const handleTabKey = (e) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    // Фокусиране на първия елемент
+    requestAnimationFrame(() => {
+      if (firstInputRef.current) {
+        firstInputRef.current.focus();
+      } else {
+        const input = modalElement.querySelector('input, button');
+        if (input) input.focus();
+      }
+    });
+
+    document.addEventListener('keydown', handleTabKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleTabKey);
+    };
+  }, [showEditModal]);
 
   // Зареждане на профила
   useEffect(() => {
@@ -37,7 +127,7 @@ const Profile = () => {
           email: response.data.email
         };
         setFormData(data);
-        setEditFormData(data);  // 👈 Инициализираме и двете
+        setEditFormData(data);
       } catch (error) {
         console.error('Грешка при зареждане на профила:', error);
         toast.error('Грешка при зареждане на профила');
@@ -48,16 +138,10 @@ const Profile = () => {
     fetchProfile();
   }, [token]);
 
-  // Отваряне на формата за редакция
-  const startEditing = () => {
-    setEditFormData(formData);  // 👈 Копираме текущите стойности
-    setIsEditing(true);
-  };
-
-  // Отказ от редакция
-  const cancelEditing = () => {
-    setIsEditing(false);
-    // НЕ променяме formData – запазваме оригиналните стойности
+  // Отваряне на модала
+  const openEditModal = () => {
+    setEditFormData(formData);
+    setShowEditModal(true);
   };
 
   // Обновяване на профила
@@ -69,11 +153,11 @@ const Profile = () => {
       });
 
       const updatedUser = response.data;
-      setFormData(updatedUser);  // 👈 Обновяваме показваните данни
+      setFormData(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
       toast.success('Профилът е обновен успешно!');
-      setIsEditing(false);
+      setShowEditModal(false);
     } catch (error) {
       console.error('Грешка при обновяване:', error);
       toast.error(error.response?.data?.message || 'Грешка при обновяване на профила');
@@ -137,7 +221,7 @@ const Profile = () => {
     <div className="profile-container">
       <h2 className="profile-title">👤 Моят профил</h2>
 
-      {/* Информация за профила - само за показване */}
+      {/* Информация за профила */}
       <div className="profile-card">
         <div className="profile-info">
           <div className="profile-field">
@@ -150,47 +234,64 @@ const Profile = () => {
           </div>
           <button
             className="profile-edit-btn"
-            onClick={startEditing}
+            onClick={openEditModal}
           >
             ✏️ Редактирай профил
           </button>
         </div>
       </div>
 
-      {/* Форма за редактиране - със собствено състояние */}
-      {isEditing && (
-        <div className="profile-card">
-          <h3>Редактиране на профил</h3>
-          <form onSubmit={handleUpdateProfile} className="profile-form">
-            <div className="form-group">
-              <label>Име</label>
-              <input
-                type="text"
-                value={editFormData.name}
-                onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Имейл</label>
-              <input
-                type="email"
-                value={editFormData.email}
-                onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
-                required
-              />
-            </div>
-            <div className="profile-form-actions">
-              <button type="submit" className="save-btn">💾 Запази</button>
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={cancelEditing}
-              >
-                ❌ Отказ
-              </button>
-            </div>
-          </form>
+      {/* 🟢 МОДАЛ ЗА РЕДАКТИРАНЕ */}
+      {showEditModal && (
+        <div className="modal-overlay" onClick={closeEditModal}>
+          <div className="modal-frm" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={closeEditModal}>
+              &times;
+            </button>
+            <h2>✏️ Редактиране на профил</h2>
+
+            <form onSubmit={handleUpdateProfile}>
+              <div className="form-group">
+                <label htmlFor="edit-name">Име</label>
+                <input
+                  id="edit-name"
+                  ref={firstInputRef}
+                  className="input input-modal"
+                  type="text"
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                  placeholder="Въведете име..."
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="edit-email">Имейл</label>
+                <input
+                  id="edit-email"
+                  className="input input-modal"
+                  type="email"
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                  placeholder="Въведете имейл..."
+                  required
+                />
+              </div>
+
+              <div className="modal-btns">
+                <button type="submit" className="save-btn">
+                  💾 Запази
+                </button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={closeEditModal}
+                >
+                  ❌ Отказ
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
@@ -239,7 +340,6 @@ const Profile = () => {
           <button
             className="danger-btn"
             onClick={() => setShowDeleteConfirm(true)}
-            title='Изтрива профила!'
           >
             🗑️ Изтрий профил
           </button>
