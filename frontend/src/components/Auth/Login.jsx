@@ -58,7 +58,7 @@ const Login = ({ onSwitchToRegister }) => {
     <div className="auth-container">
       <h2 className="auth-title">Вход</h2>
 
-      <form onSubmit={onSubmit} className="auth-form">
+      <form onSubmit={onSubmit} className="auth-form" autoComplete="on">
         <div className="auth-form-group">
           <label className="auth-label">Имейл</label>
           <input
