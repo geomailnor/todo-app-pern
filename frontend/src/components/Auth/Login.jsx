@@ -82,7 +82,6 @@ const Login = ({ onSwitchToRegister }) => {
             className="auth-input"
             value={formData.password}
             onChange={handleChange}
-            placeholder="••••••••"
             autoComplete="current-password"
             id="password"
           />

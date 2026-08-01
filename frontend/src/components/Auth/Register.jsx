@@ -100,7 +100,7 @@ const Register = ({ onSwitchToLogin }) => {
             className="auth-input"
             value={formData.password}
             onChange={handleChange}
-            placeholder="••••••••"
+            autoComplete="new-password"
           />
           {errors.password && <p className="auth-error">{errors.password}</p>}
         </div>
@@ -113,7 +113,7 @@ const Register = ({ onSwitchToLogin }) => {
             className="auth-input"
             value={formData.confirmPassword}
             onChange={handleChange}
-            placeholder="••••••••"
+            autoComplete="new-password"
           />
           {errors.confirmPassword && <p className="auth-error">{errors.confirmPassword}</p>}
         </div>
