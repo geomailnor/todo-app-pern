@@ -1,5 +1,5 @@
-// frontend/src/contexts/AuthContext.jsx
 import { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Проверка за запазен токен при зареждане
@@ -59,6 +60,7 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('rememberMe');
     toast.success('Успешен изход!');
+    navigate('/', { replace: true });
   };
 
   const value = {
