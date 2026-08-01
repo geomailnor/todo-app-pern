@@ -245,7 +245,7 @@ function App() {
 
       <header className='my-header'>
         <div>
-          <h1>{isProfilePage ? 'Моят профил' : 'Моите задачи'}</h1> {/* 👈 ПРОМЕНИ */}
+          <h1>{isProfilePage ? 'Моят профил' : 'Моите бележки'}</h1>
         </div>
         {!isProfilePage && ( // 👈 СТАТИСТИКИ САМО НА ГЛАВНАТА
           <div className='task-statist'>
@@ -281,7 +281,7 @@ function App() {
                 type="text"
                 value={taskText}
                 onChange={(e) => setTaskText(e.target.value)}
-                placeholder='Нова задача'
+                placeholder='Нова бележка'
               />
               <button className='add-btn' title='Добави задача' onClick={addTask}>
                 <FaPlus className='add-icon' />
@@ -325,7 +325,7 @@ function App() {
             </ul>
 
             {tasks.length === 0 && !isLoading && (
-              <p className='empty-message'>📭 Нямате задачи. Добавете нова!</p>
+              <p className='empty-message'>📭 Нямате бележки. Добавете нова!</p>
             )}
           </>
         } />
