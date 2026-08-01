@@ -53,7 +53,7 @@ function App() {
 
   async function addTask() {
     if (!taskText.trim()) {
-      toast.error('Моля, напишете задача!');
+      toast.error('Моля, напишете бележка!');
       return;
     }
     try {
@@ -63,14 +63,14 @@ function App() {
       );
       setTasks((prevTasks) => [res.data, ...prevTasks]);
       setTaskText('');
-      toast.success('Задачата е добавена!');
+      toast.success('Бележката е добавена!');
     } catch (error) {
       console.error('Грешка при създаване', error);
       if (error.response?.status === 401) {
         toast.error('Сесията ви е изтекла. Моля, влезте отново!');
         logout();
       } else {
-        toast.error('Грешка при добавяне на задача!');
+        toast.error('Грешка при добавяне на бележка!');
       }
     }
   }
@@ -95,7 +95,7 @@ function App() {
         getHeaders()
       );
       // ✅ Върнати текстови съобщения
-      toast.success(completed ? 'Задачата е изпълнена!' : 'Задачата е възстановена');
+      toast.success(completed ? 'Бележката е изпълнена!' : 'Бележката е възстановена');
     } catch (error) {
       console.error('Грешка при обновяване', error);
 
@@ -130,14 +130,14 @@ function App() {
       ));
       setEditingId(null);
       setEditedText('');
-      toast.success('Задачата е обновена успешно!');
+      toast.success('Бележката е обновена успешно!');
     } catch (error) {
       console.error('Грешка при обновяване', error);
       if (error.response?.status === 401) {
         toast.error('Сесията ви е изтекла. Моля, влезте отново!');
         logout();
       } else {
-        toast.error('Грешка при обновяване на задачата!');
+        toast.error('Грешка при обновяване на бележката!');
       }
     }
   }
@@ -146,14 +146,14 @@ function App() {
     try {
       await axios.delete(`${API_URL}/api/todos/${id}`, getHeaders());
       setTasks((tasks) => tasks.filter((task) => task.id !== id));
-      toast.success('Задачата е изтрита!');
+      toast.success('Бележката е изтрита!');
     } catch (error) {
       console.error('Грешка при изтриване', error);
       if (error.response?.status === 401) {
         toast.error('Сесията ви е изтекла. Моля, влезте отново!');
         logout();
       } else {
-        toast.error('Грешка при изтриване на задача!');
+        toast.error('Грешка при изтриване на бележка!');
       }
     }
   }
@@ -283,7 +283,7 @@ function App() {
                 onChange={(e) => setTaskText(e.target.value)}
                 placeholder='Нова бележка'
               />
-              <button className='add-btn' title='Добави задача' onClick={addTask}>
+              <button className='add-btn' title='Добави бележка' onClick={addTask}>
                 <FaPlus className='add-icon' />
                 <span className='btn-zagl'>Добави</span>
               </button>
@@ -314,8 +314,8 @@ function App() {
                         <FaCheck />
                       </span>
                       <span className='task-text'>{task.task}</span>
-                      <button className='edit-btn' title="Редактирай задача" onClick={() => startEditing(task)}><FaEdit /></button>
-                      <button onClick={() => deleteTask(task.id)} className='delete-btn' title="Изтрий задача">
+                      <button className='edit-btn' title="Редактирай бележка" onClick={() => startEditing(task)}><FaEdit /></button>
+                      <button onClick={() => deleteTask(task.id)} className='delete-btn' title="Изтрий бележка">
                         <FaTrash />
                       </button>
                     </>

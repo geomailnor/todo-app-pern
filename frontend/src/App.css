@@ -272,7 +272,7 @@ body {
   color: var(--card);
 }
 
-/* === Текст на задачата === */
+/* === Текст на бележката === */
 .task-text {
   flex: 1;
   font-size: 1rem;

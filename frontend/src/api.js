@@ -73,7 +73,7 @@ export const createTodo = async (task) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'Грешка при създаване на задача');
+    throw new Error(data.message || 'Грешка при създаване на бележка');
   }
 
   return data;
@@ -89,7 +89,7 @@ export const updateTodo = async (id, completed) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'Грешка при обновяване на задача');
+    throw new Error(data.message || 'Грешка при обновяване на бележка');
   }
 
   return data;
@@ -119,7 +119,7 @@ export const deleteTodo = async (id) => {
 
   if (!response.ok) {
     const data = await response.json();
-    throw new Error(data.message || 'Грешка при изтриване на задача');
+    throw new Error(data.message || 'Грешка при изтриване на бележка');
   }
 
   return true;
@@ -134,7 +134,7 @@ export const toggleTodo = async (id) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'Грешка при превключване на задача');
+    throw new Error(data.message || 'Грешка при превключване на бележка');
   }
 
   return data;
