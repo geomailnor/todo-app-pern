@@ -52,8 +52,11 @@ body {
 }
 
 .header-actions {
+  margin-left: 12px;
   display: flex;
   align-items: center;
+  width: 100%;
+  justify-content: space-between;
   gap: 12px;
 }
 
@@ -124,6 +127,7 @@ body {
   font-size: 0.9rem;
   height: 36px;
   white-space: nowrap;
+  border-radius: 8px;
 }
 
 .task-statist span:last-child {
@@ -131,10 +135,12 @@ body {
   color: #2e7d32;
 }
 
-.my-header h1 {
-  font-size: 1.4rem;
+h1 {
+  font-size: 1.8rem;
   color: #2C3E50;
-  padding: 0 12px;
+  padding: 0 12px 24px 12px;
+  white-space: nowrap;
+  text-align: center;
 }
 
 /* ===== ФОРМА ЗА ДОБАВЯНЕ ===== */
@@ -211,6 +217,7 @@ body {
   list-style: none;
   max-height: 60vh;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 4px;
 }
 
@@ -572,12 +579,13 @@ body {
 
 .profile-field {
   display: flex;
-  justify-content: space-between;
   justify-content: flex-start;
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
-  gap: 40px;
+  gap: 30px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .profile-field:last-of-type {
@@ -588,8 +596,7 @@ body {
   color: var(--text-light);
   font-weight: 500;
   font-size: 0.9rem;
-  min-width: 80px;
-  /* 👈 Фиксирана ширина за лейбъла */
+  min-width: 60px;
   flex-shrink: 0;
   /* 👈 За да не се свива */
 }
@@ -613,6 +620,7 @@ body {
   font-weight: 500;
   transition: var(--transition);
   align-self: flex-start;
+  white-space: nowrap;
 }
 
 .profile-edit-btn:hover {
@@ -672,6 +680,7 @@ body {
   font-size: 0.95rem;
   font-weight: 500;
   transition: var(--transition);
+  white-space: nowrap;
 }
 
 .save-btn:hover {
@@ -694,6 +703,7 @@ body {
   font-size: 0.95rem;
   font-weight: 500;
   transition: var(--transition);
+  white-space: nowrap;
 }
 
 .cancel-btn:hover {
@@ -713,6 +723,7 @@ body {
   font-weight: 500;
   transition: var(--transition);
   width: 100%;
+  white-space: nowrap;
 }
 
 .password-btn:hover {
@@ -807,18 +818,52 @@ body {
   text-decoration: none;
 }
 
+@media (max-width: 920px) {
+  .task-item:has(.btn-wrapper) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .btn-wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .edit-input {
+    width: 100%;
+  }
+}
+
 /* ==== RESPONSIVE ==== */
-@media (max-width : 802px) {
+@media (max-width : 720px) {
   .my-header {
     flex-direction: column;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    padding-bottom: 0;
   }
 
   .task-statist {
     padding-top: 10px;
   }
 
-  .header-btns {
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
     margin-top: 12px;
+    margin-left: 0;
+  }
+
+  .profile-field {
+    gap: 8px;
+  }
+
+  .profile-field label {
+    min-width: 50px;
+    flex-shrink: 0;
   }
 }
 
@@ -858,7 +903,7 @@ body {
     padding: 24px 16px;
   }
 
-  .my-header h1 {
+  h1 {
     font-size: 1.2rem;
   }
 }

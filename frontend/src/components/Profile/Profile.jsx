@@ -225,16 +225,17 @@ const Profile = () => {
       <div className="profile-card">
         <div className="profile-info">
           <div className="profile-field">
-            <label>Име</label>
+            <label>Име:</label>
             <p>{formData.name}</p>
           </div>
           <div className="profile-field">
-            <label>Имейл</label>
+            <label>Имейл:</label>
             <p>{formData.email}</p>
           </div>
           <button
             className="profile-edit-btn"
             onClick={openEditModal}
+            title="Редактиране на профила"
           >
             ✏️ Редактирай профил
           </button>
@@ -279,12 +280,13 @@ const Profile = () => {
               </div>
 
               <div className="modal-btns">
-                <button type="submit" className="save-btn">
+                <button type="submit" className="save-btn" title='Запазва промените'>
                   💾 Запази
                 </button>
                 <button
                   type="button"
                   className="cancel-btn"
+                  title='Отказва промените'
                   onClick={closeEditModal}
                 >
                   ❌ Отказ
@@ -326,7 +328,7 @@ const Profile = () => {
               required
             />
           </div>
-          <button type="submit" className="password-btn">🔄 Промени парола</button>
+          <button type="submit" className="password-btn" title='Променя паролата'>🔄 Промени парола</button>
         </form>
       </div>
 
@@ -340,6 +342,7 @@ const Profile = () => {
           <button
             className="danger-btn"
             onClick={() => setShowDeleteConfirm(true)}
+            title='Изтрива завинаги профила !'
           >
             🗑️ Изтрий профил
           </button>

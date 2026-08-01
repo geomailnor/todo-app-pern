@@ -243,10 +243,11 @@ function App() {
         }}
       />
 
+      <div>
+        <h1>{isProfilePage ? 'Промяна на профил' : 'Моите бележки'}</h1>
+      </div>
       <header className='my-header'>
-        <div>
-          <h1>{isProfilePage ? 'Моят профил' : 'Моите бележки'}</h1>
-        </div>
+
         {!isProfilePage && ( // 👈 СТАТИСТИКИ САМО НА ГЛАВНАТА
           <div className='task-statist'>
             <span>общо: {tasks.length}</span>
@@ -254,16 +255,16 @@ function App() {
           </div>
         )}
         <div className="header-actions">
-          {isProfilePage ? ( // 👈 КОГАТО СМЕ В ПРОФИЛА
-            <Link to="/" className="header-btns back-btn">
+          {isProfilePage ? ( // КОГАТО СМЕ В ПРОФИЛА
+            <Link to="/" className="header-btns back-btn" title="Назад">
               <FaArrowLeft /> Назад
             </Link>
-          ) : ( // 👈 КОГАТО СМЕ В СПИСЪКА
-            <Link to="/profile" className="header-btns profile-btn">
+          ) : ( // КОГАТО СМЕ В СПИСЪКА
+            <Link to="/profile" className="header-btns profile-btn" title="Профил на потребителя">
               <FaUser /> Профил
             </Link>
           )}
-          <button onClick={logout} className="header-btns logout-btn">
+          <button onClick={logout} className="header-btns logout-btn" title='Излизане'>
             <FaSignOutAlt /> Изход
           </button>
         </div>
@@ -299,11 +300,14 @@ function App() {
                         value={editedText}
                         onChange={(e) => setEditedText(e.target.value)}
                         className='edit-input'
+                        name='edit-bel'
                         autoFocus
                         onKeyPress={(e) => e.key === 'Enter' && updateTask(task.id)}
                       />
-                      <button className='save-btn' onClick={() => updateTask(task.id)}>💾 Запази</button>
-                      <button className='cancel-btn' onClick={cancelEditing}>❌ Отказ</button>
+                      <div className='btn-wrapper'>
+                        <button className='save-btn' title='Запазва промените' onClick={() => updateTask(task.id)}>💾 Запази</button>
+                        <button className='cancel-btn' title='Откажи промените' onClick={cancelEditing}>❌ Отказ</button>
+                      </div>
                     </>
                   ) : (
                     <>
