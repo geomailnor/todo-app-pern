@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { loginUser } from '../../api';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Login = ({ onSwitchToRegister }) => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -44,6 +46,7 @@ const Login = ({ onSwitchToRegister }) => {
 
       login(result.user, result.token, formData.rememberMe);
       toast.success('Успешен вход!');
+      navigate('/', { replace: true });
     } catch (error) {
       toast.error(error.message);
     } finally {

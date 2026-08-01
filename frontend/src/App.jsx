@@ -1,4 +1,3 @@
-// frontend/src/App.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
@@ -22,7 +21,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [editingId, setEditingId] = useState(null);
   const [editedText, setEditedText] = useState('');
-
+  const [isToggling, setIsToggling] = useState(false);
   // ✅ ФУНКЦИИТЕ
   const getHeaders = () => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -45,7 +44,7 @@ function App() {
         logout();
       } else {
         setTasks([]);
-        toast.error('❌ Грешка при зареждане на задачите!');
+        toast.error('Грешка при зареждане на задачите!');
       }
     } finally {
       setIsLoading(false);
@@ -71,29 +70,48 @@ function App() {
         toast.error('Сесията ви е изтекла. Моля, влезте отново!');
         logout();
       } else {
-        toast.error('❌ Грешка при добавяне на задача!');
+        toast.error('Грешка при добавяне на задача!');
       }
     }
   }
 
   async function toggleTask(id, completed) {
+    // Предотвратяваме множество кликове
+    if (isToggling) return;
+    setIsToggling(true);
+    // Запазваме текущото състояние за при грешка
+    const previousTasks = [...tasks];
+
+    // 💡 Оптимистично обновяване - веднага променяме UI-то
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, completed } : task
+      )
+    );
+
     try {
       await axios.put(`${API_URL}/api/todos/${id}`,
         { completed },
         getHeaders()
       );
-      setTasks((prevTasks) => prevTasks.map((task) =>
-        task.id === id ? { ...task, completed } : task
-      ));
-      toast.success(completed ? '✅ Задачата е изпълнена!' : '🔄 Задачата е възстановена');
+      // ✅ Върнати текстови съобщения
+      toast.success(completed ? 'Задачата е изпълнена!' : 'Задачата е възстановена');
     } catch (error) {
       console.error('Грешка при обновяване', error);
+
+      // 🔄 Връщаме старата стойност при грешка
+      setTasks(previousTasks);
+
       if (error.response?.status === 401) {
         toast.error('Сесията ви е изтекла. Моля, влезте отново!');
         logout();
       } else {
-        toast.error('❌ Грешка при обновяване на статуса');
+        toast.error('Грешка при обновяване на статуса');
       }
+    }
+    finally {
+      // 🔓 Освобождаваме блокировката
+      setIsToggling(false);
     }
   }
 
@@ -112,14 +130,14 @@ function App() {
       ));
       setEditingId(null);
       setEditedText('');
-      toast.success('✅ Задачата е обновена успешно!');
+      toast.success('Задачата е обновена успешно!');
     } catch (error) {
       console.error('Грешка при обновяване', error);
       if (error.response?.status === 401) {
         toast.error('Сесията ви е изтекла. Моля, влезте отново!');
         logout();
       } else {
-        toast.error('❌ Грешка при обновяване на задачата!');
+        toast.error('Грешка при обновяване на задачата!');
       }
     }
   }
@@ -128,14 +146,14 @@ function App() {
     try {
       await axios.delete(`${API_URL}/api/todos/${id}`, getHeaders());
       setTasks((tasks) => tasks.filter((task) => task.id !== id));
-      toast.success('🗑️ Задачата е изтрита!');
+      toast.success('Задачата е изтрита!');
     } catch (error) {
       console.error('Грешка при изтриване', error);
       if (error.response?.status === 401) {
         toast.error('Сесията ви е изтекла. Моля, влезте отново!');
         logout();
       } else {
-        toast.error('❌ Грешка при изтриване на задача!');
+        toast.error('Грешка при изтриване на задача!');
       }
     }
   }
@@ -181,7 +199,6 @@ function App() {
       </>
     );
   }
-
   // Показване на зареждане
   if (authLoading) {
     return (
@@ -197,8 +214,6 @@ function App() {
     );
   }
 
-
-  // ✅ ОСНОВЕН RETURN (променен)
   return (
     <div className='app-container'>
       <Toaster
@@ -254,7 +269,7 @@ function App() {
         </div>
       </header>
 
-      {/* 👇 НОВО: Маршрутизация между задачи и профил */}
+      {/* 👇 Маршрутизация между задачи и профил */}
       <Routes>
         <Route path="/" element={
           <>
