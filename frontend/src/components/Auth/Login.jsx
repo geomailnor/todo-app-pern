@@ -68,6 +68,8 @@ const Login = ({ onSwitchToRegister }) => {
             value={formData.email}
             onChange={handleChange}
             placeholder="имейл тук"
+            autoComplete="username"
+            id="email"
           />
           {errors.email && <p className="auth-error">{errors.email}</p>}
         </div>
@@ -81,6 +83,8 @@ const Login = ({ onSwitchToRegister }) => {
             value={formData.password}
             onChange={handleChange}
             placeholder="••••••••"
+            autoComplete="current-password"
+            id="password"
           />
           {errors.password && <p className="auth-error">{errors.password}</p>}
         </div>
