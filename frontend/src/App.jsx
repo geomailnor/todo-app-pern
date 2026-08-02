@@ -167,7 +167,13 @@ function App() {
     setEditingId(null);
     setEditedText('');
   }
-
+  function checkEditing() {
+    if (editingId) {
+      toast.error('Моля, завършете текущата редакция първо!');
+      return true; // Има редакция
+    }
+    return false; // Няма редакция
+  };
   useEffect(() => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (token && isAuthenticated) {
@@ -260,11 +266,21 @@ function App() {
               <FaArrowLeft /> Назад
             </Link>
           ) : ( // КОГАТО СМЕ В СПИСЪКА
-            <Link to="/profile" className="header-btns profile-btn" title="Профил на потребителя">
+            <Link to="/profile" className="header-btns profile-btn"
+              title="Профил на потребителя"
+              onClick={(e) => {
+                if (editingId) {
+                  e.preventDefault();
+                  toast.error('Моля, завършете редакцията първо!');
+                }
+              }}
+            >
               <FaUser /> Профил
             </Link>
           )}
-          <button onClick={logout} className="header-btns logout-btn" title='Излизане'>
+          <button onClick={() => { if (editingId) { toast.error('Моля, завършете редакцията първо!'); return; } logout(); }}
+            className="header-btns logout-btn"
+            title='Излизане'>
             <FaSignOutAlt /> Изход
           </button>
         </div>
@@ -282,9 +298,17 @@ function App() {
                 type="text"
                 value={taskText}
                 onChange={(e) => setTaskText(e.target.value)}
-                placeholder='Нова бележка'
+                placeholder={editingId ? '🔒' : 'Нова бележка'}
+                disabled={!!editingId}  // 👈 Блокира, когато се редактира
+                style={editingId ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
               />
-              <button className='add-btn' title='Добави бележка' onClick={addTask}>
+              <button className='add-btn'
+                title={editingId ? 'Завършете редакцията първо' : 'Добави бележка'}
+                onClick={addTask}
+                disabled={!!editingId}  // 👈 Блокира, когато се редактира
+                style={editingId ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+
+              >
                 <FaPlus className='add-icon' />
                 <span className='btn-zagl'>Добави</span>
               </button>
@@ -302,7 +326,7 @@ function App() {
                         className='edit-input'
                         name='edit-bel'
                         autoFocus
-                        onKeyPress={(e) => e.key === 'Enter' && updateTask(task.id)}
+                        onKeyDown={(e) => e.key === 'Enter' && updateTask(task.id)}
                       />
                       <div className='btn-wrapper'>
                         <button className='save-btn' title='Запазва промените' onClick={() => updateTask(task.id)}>💾 Запази</button>
@@ -313,13 +337,35 @@ function App() {
                     <>
                       <span
                         className={`task-check ${task.completed ? 'checked' : ''}`}
-                        onClick={() => toggleTask(task.id, !task.completed)}
+                        onClick={() => {
+                          if (checkEditing()) return;
+                          toggleTask(task.id, !task.completed);
+                        }}
+                        style={editingId ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                       >
                         <FaCheck />
                       </span>
                       <span className='task-text'>{task.task}</span>
-                      <button className='edit-btn' title="Редактирай бележка" onClick={() => startEditing(task)}><FaEdit /></button>
-                      <button onClick={() => deleteTask(task.id)} className='delete-btn' title="Изтрий бележка">
+                      <button className='edit-btn'
+                        title={editingId ? 'Завършете текущата редакция!' : "Редактирай бележка"}
+                        onClick={() => {
+                          if (checkEditing()) return;
+                          startEditing(task);
+                        }}
+                        style={editingId ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (checkEditing()) return;
+                          deleteTask(task.id);
+                        }}
+                        className='delete-btn'
+                        title="Изтрий бележка"
+                        title={editingId ? 'Завършете текущата редакция!' : "Изтрий бележка"}
+                        style={editingId ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                      >
                         <FaTrash />
                       </button>
                     </>
