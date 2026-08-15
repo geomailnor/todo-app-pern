@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { registerUser } from '../../api';
+import { registerUser, loginUser } from '../../api';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Register = ({ onSwitchToLogin }) => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -41,22 +45,30 @@ const Register = ({ onSwitchToLogin }) => {
 
     setIsLoading(true);
     try {
+      // Регистрация
       await registerUser({
         name: formData.name,
         email: formData.email,
         password: formData.password
       });
 
-      toast.success('Регистрацията е успешна! Моля, влезте.');
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
+      toast.success('Регистрацията е успешна! Влизаме...');
+
+      // Автоматичен логин
+      const loginResult = await loginUser({
+        email: formData.email,
+        password: formData.password
       });
-      onSwitchToLogin();
+
+      // Запазваме данните в контекста
+      login(loginResult.user, loginResult.token, false);
+
+      toast.success('Добре дошли!');
+      navigate('/'); // Пренасочваме към задачите
+
     } catch (error) {
-      toast.error(error.message);
+      console.error('Грешка при регистрация:', error);
+      toast.error(error.message || 'Грешка при регистрация');
     } finally {
       setIsLoading(false);
     }
@@ -75,6 +87,7 @@ const Register = ({ onSwitchToLogin }) => {
             className="auth-input"
             value={formData.name}
             onChange={handleChange}
+            autoComplete="off"
           />
           {errors.name && <p className="auth-error">{errors.name}</p>}
         </div>
@@ -87,7 +100,7 @@ const Register = ({ onSwitchToLogin }) => {
             className="auth-input"
             value={formData.email}
             onChange={handleChange}
-            placeholder=""
+            autoComplete="off"
           />
           {errors.email && <p className="auth-error">{errors.email}</p>}
         </div>
