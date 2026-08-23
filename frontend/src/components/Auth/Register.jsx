@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { registerUser, loginUser } from '../../api';
 import { useAuth } from '../../contexts/AuthContext';
+import oko1 from '../../assets/oko1.png';
+import oko2 from '../../assets/oko2.png';
 
 const Register = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -15,6 +17,11 @@ const Register = ({ onSwitchToLogin }) => {
     confirmPassword: ''
   });
   const [errors, setErrors] = useState({});
+  const passwordRef = useRef(null);
+  const [pasvisible, setPasvisible] = useState(false);
+  useEffect(() => {
+    passwordRef.current?.focus();
+  }, [pasvisible]);
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -107,21 +114,32 @@ const Register = ({ onSwitchToLogin }) => {
 
         <div className="auth-form-group">
           <label className="auth-label">Парола</label>
-          <input
-            type="password"
-            name="password"
-            className="auth-input"
-            value={formData.password}
-            onChange={handleChange}
-            autoComplete="new-password"
-          />
+          <div className='pass-wrapper'>
+            <input
+              type={pasvisible ? 'text' : 'password'}
+              name="password"
+              className="auth-input user-password"
+              value={formData.password}
+              onChange={handleChange}
+              autoComplete="new-password"
+              ref={passwordRef}
+            />
+            <button type='button' className='show-login-btn' onClick={() => setPasvisible(!pasvisible)}>
+              <img src={pasvisible ? oko2 : oko1}
+                title={pasvisible ? 'скрий' : 'покажи'}
+                alt={pasvisible ? 'Скрий парола' : 'Покажи парола'}
+                width="22"
+                height="18"
+              />
+            </button>
+          </div>
           {errors.password && <p className="auth-error">{errors.password}</p>}
         </div>
 
         <div className="auth-form-group">
-          <label className="auth-label">Потвърди парола</label>
+          <label className="auth-label">Потвърди паролата</label>
           <input
-            type="password"
+            type={pasvisible ? 'text' : 'password'}
             name="confirmPassword"
             className="auth-input"
             value={formData.confirmPassword}

@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { loginUser } from '../../api';
 import { useAuth } from '../../contexts/AuthContext';
+import oko1 from '../../assets/oko1.png';
+import oko2 from '../../assets/oko2.png';
+
 
 const Login = ({ onSwitchToRegister }) => {
   const navigate = useNavigate();
@@ -13,6 +16,7 @@ const Login = ({ onSwitchToRegister }) => {
     rememberMe: false
   });
   const [errors, setErrors] = useState({});
+  const [pasvisible, setPasvisible] = useState(false);
 
   const { login } = useAuth();
 
@@ -76,15 +80,25 @@ const Login = ({ onSwitchToRegister }) => {
 
         <div className="auth-form-group">
           <label className="auth-label">Парола</label>
-          <input
-            type="password"
-            name="password"
-            className="auth-input"
-            value={formData.password}
-            onChange={handleChange}
-            autoComplete="current-password"
-            id="password"
-          />
+          <div className='pass-wrapper'>
+            <input
+              type={pasvisible ? 'text' : 'password'}
+              name="password"
+              className="auth-input user-password"
+              value={formData.password}
+              onChange={handleChange}
+              autoComplete="current-password"
+              id="password"
+            />
+            <button type='button' className='show-login-btn' onClick={() => setPasvisible(!pasvisible)}>
+              <img src={pasvisible ? oko2 : oko1}
+                title={pasvisible ? 'скрий' : 'покажи'}
+                alt={pasvisible ? 'Скрий парола' : 'Покажи парола'}
+                width="22"
+                height="18"
+              />
+            </button>
+          </div>
           {errors.password && <p className="auth-error">{errors.password}</p>}
         </div>
 

@@ -439,6 +439,30 @@ h1 {
   background: white;
 }
 
+.pass-wrapper {
+  position: relative;
+}
+
+.user-password {
+  width: 100%;
+  padding-right: 52px;
+}
+
+.show-login-btn {
+  position: absolute;
+  right: 12px;
+  top: 25%;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.show-login-btn:hover {
+  opacity: 0.7;
+}
+
 .auth-error {
   color: #d32f2f;
   font-size: 0.8rem;
