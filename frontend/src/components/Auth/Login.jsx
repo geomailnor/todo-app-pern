@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { loginUser } from '../../api';
@@ -16,8 +16,11 @@ const Login = ({ onSwitchToRegister }) => {
     rememberMe: false
   });
   const [errors, setErrors] = useState({});
+  const passwordRef = useRef(null);
   const [pasvisible, setPasvisible] = useState(false);
-
+  useEffect(() => {
+    passwordRef.current.focus();
+  }, [pasvisible]);
   const { login } = useAuth();
 
   const handleChange = (e) => {
@@ -89,6 +92,7 @@ const Login = ({ onSwitchToRegister }) => {
               onChange={handleChange}
               autoComplete="current-password"
               id="password"
+              ref={passwordRef}
             />
             <button type='button' className='show-login-btn' onClick={() => setPasvisible(!pasvisible)}>
               <img src={pasvisible ? oko2 : oko1}
