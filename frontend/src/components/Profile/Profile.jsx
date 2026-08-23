@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../contexts/AuthContext';
+import oko1 from '../../assets/oko1.png';
+import oko2 from '../../assets/oko2.png';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -23,6 +25,8 @@ const Profile = () => {
     confirmPassword: ''
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const passwordRef = useRef(null);
+  const [pasvisible, setPasvisible] = useState(false);
   const firstInputRef = useRef(null);
   // Затваряне на модала
   const closeEditModal = useCallback(() => {
@@ -137,6 +141,10 @@ const Profile = () => {
     };
     fetchProfile();
   }, [token]);
+
+  useEffect(() => {
+    passwordRef.current?.focus();
+  }, [pasvisible]);
 
   // Отваряне на модала
   const openEditModal = () => {
@@ -303,17 +311,29 @@ const Profile = () => {
         <form onSubmit={handleChangePassword} className="profile-form">
           <div className="form-group">
             <label>Текуща парола</label>
-            <input
-              type="password"
-              value={passwordData.currentPassword}
-              onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-              required
-            />
+            <div className='pass-wrapper'>
+              <input
+                type={pasvisible ? 'text' : 'password'}
+                className='user-password'
+                value={passwordData.currentPassword}
+                onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                required
+                ref={passwordRef}
+              />
+              <button type='button' className='show-login-btn' onClick={() => setPasvisible(!pasvisible)}>
+                <img src={pasvisible ? oko2 : oko1}
+                  title={pasvisible ? 'скрий' : 'покажи'}
+                  alt={pasvisible ? 'Скрий парола' : 'Покажи парола'}
+                  width="22"
+                  height="18"
+                />
+              </button>
+            </div>
           </div>
           <div className="form-group">
             <label>Нова парола</label>
             <input
-              type="password"
+              type={pasvisible ? 'text' : 'password'}
               value={passwordData.newPassword}
               onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
               required
@@ -322,7 +342,7 @@ const Profile = () => {
           <div className="form-group">
             <label>Потвърди нова парола</label>
             <input
-              type="password"
+              type={pasvisible ? 'text' : 'password'}
               value={passwordData.confirmPassword}
               onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
               required
