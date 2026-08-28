@@ -3,10 +3,10 @@ import axios from 'axios';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { FaPlus, FaTrash, FaCheck, FaEdit, FaSignOutAlt, FaUser, FaArrowLeft } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
-import './App.css';
 import Auth from './components/Auth/Auth';
 import Profile from './components/Profile/Profile';
 import { useAuth } from './contexts/AuthContext';
+import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
