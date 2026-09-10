@@ -362,7 +362,7 @@ function App() {
                           deleteTask(task.id);
                         }}
                         className='delete-btn'
-                        title="Изтрий бележка"
+                        // title="Изтрий бележка"
                         title={editingId ? 'Завършете текущата редакция!' : "Изтрий бележка"}
                         style={editingId ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                       >
